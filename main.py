@@ -1,7 +1,8 @@
 """Two-Sentence Horror -- make.fun entry.
 
-A horror story of exactly two sentences: a smart speaker whispers at 3 a.m. even though it is unplugged. The program checks the entry, prints it, and writes it to
-/output/entry.txt.
+A horror story of exactly two sentences: a smart speaker whispers at
+3 a.m. even though it is unplugged. The program checks the entry,
+prints it, and writes it to /output/entry.txt.
 Pure Python 3.13 standard library only; deterministic; no network.
 SPDX-License-Identifier: MIT
 """
@@ -33,6 +34,18 @@ def check_entry(line):
     return line
 
 
+def check_shape(line):
+    """Both sentences must carry dread: each names the speaker or the wait."""
+    parts = [part.strip() for part in line.split(". ") if part.strip()]
+    if len(parts) != 2:
+        raise ValueError("entry must be exactly two sentences")
+    if "speaker" not in parts[0]:
+        raise ValueError("first sentence must name the smart speaker")
+    if "waiting" not in parts[1]:
+        raise ValueError("second sentence must end on the waiting")
+    return line
+
+
 def write_entry(line):
     """Print the line and store it in /output/entry.txt."""
     print(line)
@@ -43,7 +56,7 @@ def write_entry(line):
 
 def run():
     # Check before writing, so only a well-formed entry is stored.
-    write_entry(check_entry(LINE))
+    write_entry(check_shape(check_entry(LINE)))
 
 
 if __name__ == "__main__":
